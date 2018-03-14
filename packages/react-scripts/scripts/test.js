@@ -1,50 +1,24 @@
-// @remove-on-eject-begin
-/**
- * Copyright (c) 2015-present, Facebook, Inc.
+/*
+ * ADOBE CONFIDENTIAL
  *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * Copyright 2017 Adobe Systems Incorporated
+ * All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Adobe Systems Incorporated and its suppliers,
+ * if any.  The intellectual and technical concepts contained
+ * herein are proprietary to Adobe Systems Incorporated and its
+ * suppliers and may be covered by U.S. and Foreign Patents,
+ * patents in process, and are protected by trade secret or copyright law.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Adobe Systems Incorporated.
  */
-// @remove-on-eject-end
-'use strict';
+let Server = require("karma").Server;
+let path = require("path");
+let parsedArgs = require("minimist")(process.argv.slice(2));
 
-// Do this as the first thing so that any code reading it knows the right env.
-process.env.BABEL_ENV = 'test';
-process.env.NODE_ENV = 'test';
-process.env.PUBLIC_URL = '';
-
-// Makes the script crash on unhandled rejections instead of silently
-// ignoring them. In the future, promise rejections that are not handled will
-// terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
-  throw err;
-});
-
-// Ensure environment variables are read.
-require('../config/env');
-
-const jest = require('jest');
-const argv = process.argv.slice(2);
-
-// Watch unless on CI or in coverage mode
-if (!process.env.CI && argv.indexOf('--coverage') < 0) {
-  argv.push('--watch');
-}
-
-// @remove-on-eject-begin
-// This is not necessary after eject because we embed config into package.json.
-const createJestConfig = require('./utils/createJestConfig');
-const path = require('path');
-const paths = require('../config/paths');
-argv.push(
-  '--config',
-  JSON.stringify(
-    createJestConfig(
-      relativePath => path.resolve(__dirname, '..', relativePath),
-      path.resolve(paths.appSrc, '..'),
-      false
-    )
-  )
-);
-// @remove-on-eject-end
-jest.run(argv);
+new Server({
+    configFile: path.join(__dirname, "..", "config", "karma.conf.js"),
+    singleRun: parsedArgs.dev !== true
+}).start();
